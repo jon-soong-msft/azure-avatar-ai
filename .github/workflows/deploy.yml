@@ -1,0 +1,95 @@
+name: Build and Deploy to Azure Container Apps
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AZURE_CONTAINER_REGISTRY: ${{ secrets.ACR_NAME }}
+  IMAGE_NAME: myato-ai-chatbot
+  RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+  CONTAINER_APP_NAME: ${{ secrets.CONTAINER_APP_NAME }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set environment based on branch
+      run: |
+        if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+        else
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+        fi
+    
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Log in to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    
+    - name: Build and push Docker image
+      run: |
+        IMAGE_TAG="${{ github.sha }}"
+        docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${IMAGE_TAG} .
+        docker tag ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${IMAGE_TAG} \
+          ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+        docker push ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${IMAGE_TAG}
+        docker push ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:latest
+      working-directory: ./src
+    
+    - name: Deploy to Azure Container Apps
+      if: github.event_name != 'pull_request'
+      run: |
+        az containerapp update \
+          --name ${{ env.CONTAINER_APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+    
+    - name: Get application URL
+      if: github.event_name != 'pull_request'
+      run: |
+        APP_URL=$(az containerapp show \
+          --name ${{ env.CONTAINER_APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query properties.configuration.ingress.fqdn \
+          --output tsv)
+        echo "Application URL: https://${APP_URL}"
+        echo "Health Check: https://${APP_URL}/health"
+    
+    - name: Run health check
+      if: github.event_name != 'pull_request'
+      run: |
+        APP_URL=$(az containerapp show \
+          --name ${{ env.CONTAINER_APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query properties.configuration.ingress.fqdn \
+          --output tsv)
+        
+        # Wait for deployment
+        sleep 30
+        
+        # Check health endpoint
+        RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://${APP_URL}/health)
+        if [ $RESPONSE -eq 200 ]; then
+          echo "Health check passed!"
+        else
+          echo "Health check failed with status code: $RESPONSE"
+          exit 1
+        fi

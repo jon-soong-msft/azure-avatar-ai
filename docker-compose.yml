@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - SPEECH_REGION=${SPEECH_REGION}
+      - SPEECH_KEY=${SPEECH_KEY}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_DEPLOYMENT_NAME=${AZURE_OPENAI_DEPLOYMENT_NAME:-gpt-4}
+      - COGNITIVE_SEARCH_ENDPOINT=${COGNITIVE_SEARCH_ENDPOINT}
+      - COGNITIVE_SEARCH_API_KEY=${COGNITIVE_SEARCH_API_KEY}
+      - COGNITIVE_SEARCH_INDEX_NAME=${COGNITIVE_SEARCH_INDEX_NAME}
+      - ENABLE_WEBSOCKETS=${ENABLE_WEBSOCKETS:-True}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
