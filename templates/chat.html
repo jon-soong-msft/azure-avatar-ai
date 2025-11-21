@@ -5,7 +5,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Singtel AIDA</title>
+    <title>AI Avatar Assistant</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v={{ cache_bust }}">
     <link rel="icon" href="{{ url_for('static', filename='image/favicon.ico') }}">
     <script src="{{ url_for('static', filename='js/chat.js') }}?v={{ cache_bust }}"></script>
@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-<h1 id="main-title">Singtel AIDA</h1>
+<h1 id="main-title">AI Avatar Assistant</h1>
 
 <input type="hidden" id="clientId" value="{{ client_id }}"></input>
 <input type="hidden" id="enableWebSockets" value="{{ enable_websockets }}"></input>
@@ -25,7 +25,7 @@
   <label for="azureOpenAIDeploymentName">Azure OpenAI Deployment Name:</label>
   <input id="azureOpenAIDeploymentName" type="text" value="gpt-4.1-mini"/>
   <label for="prompt">System Prompt:</label>
-  <textarea id="prompt">You are an AI assistant called "Amanda" that helps people find information about Singtel and its AIDA team. Encourage people to ask follow up questions or suggest follow up questions, the interaction should feel interactive, natural and foster discussion instead of just being a question-response interaction only. Be brief in your response, try to keep the response under 3 sentences</textarea>
+  <textarea id="prompt">You are an AI assistant called "Amanda" that helps people find information. Encourage people to ask follow up questions or suggest follow up questions, the interaction should feel interactive, natural and foster discussion instead of just being a question-response interaction only. Be brief in your response, try to keep the response under 3 sentences</textarea>
   <div>
     <input type="checkbox" id="enableOyd" checked onchange="window.updataEnableOyd()"><label for="enableOyd">Enable On Your Data</label>
   </div>

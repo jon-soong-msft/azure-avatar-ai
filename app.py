@@ -225,9 +225,7 @@ def connectAvatar() -> Response:
         avatar_style = request.headers.get('AvatarStyle')
         background_color = "#FFFFFFFF" if request.headers.get('BackgroundColor') is None else request.headers.get('BackgroundColor')
         #background_image_url = request.headers.get('BackgroundImageUrl')
-        #background_image_url = "https://cdn1.singteldigital.com/content/dam/singtel/about-us-singtel/media-centre/2024/20240906%20MRT.png"
-        #background_image_url = "https://static.brandfinance.com/wp-content/uploads/2023/05/shutterstock_1464421670-singtel-2-2133x1200.jpg"
-        background_image_url = "https://officesnapshots.com/wp-content/uploads/2025/06/singtel-offices-singapore-9-1024x683.jpg"
+        background_image_url = None  # Set custom background image URL here if needed
         is_custom_avatar = request.headers.get('IsCustomAvatar')
         transparent_background = 'false' if request.headers.get('TransparentBackground') is None else request.headers.get('TransparentBackground')
         video_crop = 'false' if request.headers.get('VideoCrop') is None else request.headers.get('VideoCrop')
