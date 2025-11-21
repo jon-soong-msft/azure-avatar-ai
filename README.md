@@ -1,6 +1,15 @@
 # myATO AI Chatbot - Containerized Deployment
 
-This folder contains a containerized version of the myATO AI Chatbot application optimized for deployment to Azure Container Apps.
+This folder contains a containerized version of the Azure AI Chatbot application myATO optimized for deployment to Azure Container Apps.
+The UI aims to simulate a video call between a user and a custom avatar that can converse, respond to question and which retrieve its knowledge from documents indexed by the azure AI search services. 
+
+![Azure Avatar AI Screenshot](avatar-ai-screenshot.png)
+
+## 🏗️ Architecture
+
+The application follows a microservices architecture deployed on Azure:
+
+![Architecture Diagram](architecture.png)
 
 ## 🐳 Container Optimization
 
@@ -324,6 +333,10 @@ docker build --no-cache -t myato-ai-chatbot:latest .
 - [Docker Best Practices](https://docs.docker.com/develop/dev-best-practices/)
 - [Azure Speech Service](https://learn.microsoft.com/azure/cognitive-services/speech-service/)
 - [Azure OpenAI Service](https://learn.microsoft.com/azure/cognitive-services/openai/)
+
+## 🎭 Avatar Configuration
+
+You can choose the default built-in avatar provided by Azure Avatar services (lori, meg, etc) and choose a style. Or use a custom avatar by clicking the custom avatar tickbox. Choose your preferred voice from the preconfigured selection in the dropdown list.
 
 ## 📄 License
 
