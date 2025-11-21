@@ -33,6 +33,21 @@ nano .env
 
 ### 2. Build and run with Docker
 
+#### Option A: Quick Build with PowerShell Script (Recommended)
+
+```powershell
+# Build and run the container locally
+.\local-build.ps1
+```
+
+This script will:
+- Check and stop any process using port 5000
+- Build the Docker image
+- Run the container with your .env file
+- Open the application in your browser automatically
+
+#### Option B: Manual Docker Build
+
 ```bash
 # Build the Docker image
 docker build -t myato-ai-chatbot:latest .
@@ -60,7 +75,28 @@ docker-compose down
 
 ## ☁️ Azure Container Apps Deployment
 
-### Option 1: Deploy using Azure CLI (Recommended)
+### Option 1: Deploy using PowerShell Script (Recommended)
+
+The easiest way to build and deploy to Azure Container Apps:
+
+```powershell
+# Deploy to development environment
+.\build-and-deploy.ps1
+
+# Deploy to production with specific version tag
+.\build-and-deploy.ps1 -Environment prod -Version v1.0.0
+```
+
+This script will:
+- Check prerequisites (Docker, Azure CLI)
+- Login to Azure if needed
+- Create resource group and Azure Container Registry (ACR)
+- Build Docker image and push to ACR
+- Create Container Apps environment
+- Deploy the container app with proper configuration
+- Display the application URL
+
+### Option 2: Deploy using Azure CLI (Manual)
 
 ```bash
 # 1. Login to Azure
@@ -133,7 +169,7 @@ az containerapp show \
   --output tsv
 ```
 
-### Option 2: Deploy using Azure Portal
+### Option 3: Deploy using Azure Portal
 
 1. **Build and push image to ACR:**
    ```bash
@@ -151,7 +187,7 @@ az containerapp show \
    - Set CPU: 1 core, Memory: 2GB
    - Enable autoscaling (min: 1, max: 3)
 
-### Option 3: Deploy using Kubernetes (AKS)
+### Option 4: Deploy using Kubernetes (AKS)
 
 ```bash
 # 1. Apply the Kubernetes deployment
