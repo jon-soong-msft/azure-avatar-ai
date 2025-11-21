@@ -7,7 +7,7 @@ The web app UI aims to simulate a video call between a user and a custom avatar 
 
 ## 🏗️ Architecture
 
-The application follows a microservices architecture deployed on Azure:
+The application follows a cloud-native, serverless architecture deployed on Azure that will scale with your usage:
 
 ![Architecture Diagram](architecture.png)
 
