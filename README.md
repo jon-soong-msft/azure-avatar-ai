@@ -1,7 +1,7 @@
 # myATO AI Chatbot - Containerized Deployment
 
-This folder contains a containerized version of the Azure AI Chatbot application myATO optimized for deployment to Azure Container Apps.
-The UI aims to simulate a video call between a user and a custom avatar that can converse, respond to question and which retrieve its knowledge from documents indexed by the azure AI search services. 
+This folder contains a containerized version of the Azure AI Chatbot application optimized for deployment to Azure Container Apps.
+The web app UI aims to simulate a video call between a user and a custom avatar that can converse, respond to question and which retrieve its knowledge from documents indexed by the azure AI search services. 
 
 ![Azure Avatar AI Screenshot](avatar-ai-screenshot.png)
 
