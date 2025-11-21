@@ -11,6 +11,12 @@ The application follows a microservices architecture deployed on Azure:
 
 ![Architecture Diagram](architecture.png)
 
+The solution makes use of a Azure Container Service to host the front-end. The back-end leverage Azure Speech service STT / TTS to transcribe questions back and forth to the users while Azure TTS Avatar services is used to stream the video back to the FE, in sync with the voice stream. Azure AI search is called by the application to respond to the user prompt. Documents needs to be uploaded first to an Azure Blob storage (or any other data store that is integrated to Azure AI Search) that will be indexed by the Azure AI Search indexer.
+
+The Web interface allows the user to type or input the prompts with voice. 
+
+In this repo, Azure AI Search is used, but other AI services like Copilot Studio (low code AI agent development platform) or any other AI endpoints could be used instead with minimum code changes.
+
 ## 🐳 Container Optimization
 
 The Docker image has been optimized for minimal size:
