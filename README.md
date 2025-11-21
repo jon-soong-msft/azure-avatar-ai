@@ -219,15 +219,14 @@ kubectl get service myato-ai-chatbot-service
 
 | Variable | Required | Description | Default |
 |----------|----------|-------------|---------|
-| `SPEECH_REGION` | Yes | Azure Speech Service region | `eastus2` |
+| `SPEECH_REGION` | Yes | Azure Speech Service region | - |
 | `SPEECH_KEY` | Yes | Azure Speech Service API key | - |
 | `AZURE_OPENAI_ENDPOINT` | Yes | Azure OpenAI endpoint URL | - |
 | `AZURE_OPENAI_API_KEY` | Yes | Azure OpenAI API key | - |
-| `AZURE_OPENAI_DEPLOYMENT_NAME` | No | OpenAI deployment name | `gpt-4` |
-| `COGNITIVE_SEARCH_ENDPOINT` | No | Azure Cognitive Search endpoint | - |
-| `COGNITIVE_SEARCH_API_KEY` | No | Azure Cognitive Search API key | - |
-| `COGNITIVE_SEARCH_INDEX_NAME` | No | Search index name | - |
-| `ENABLE_WEBSOCKETS` | No | Enable WebSocket support | `True` |
+| `AZURE_OPENAI_DEPLOYMENT_NAME` | Yes | OpenAI deployment name | `gpt-4.1-mini` |
+| `COGNITIVE_SEARCH_ENDPOINT` | Yes | Azure Cognitive Search endpoint | - |
+| `COGNITIVE_SEARCH_API_KEY` | Yes | Azure Cognitive Search API key | - |
+| `COGNITIVE_SEARCH_INDEX_NAME` | Yes | Search index name | - |
 
 ## 📊 Resource Requirements
 
