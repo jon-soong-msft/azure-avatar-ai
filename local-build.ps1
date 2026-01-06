@@ -83,18 +83,14 @@ if (!(Test-Path ".env")) {
 
 # Run the container
 Write-Host "Starting container..." -ForegroundColor Green
-docker run -d `
-    --name $ContainerName `
-    -p 5000:5000 `
-    --env-file .env `
-    ${ImageName}:latest
+docker run -d --name $ContainerName -p 5000:5000 --env-file .env ${ImageName}:latest
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host ""
-    Write-Host "✅ Container started successfully!" -ForegroundColor Green
+    Write-Host "Container started successfully!" -ForegroundColor Green
     Write-Host ""
-    Write-Host "🌐 Application: http://localhost:5000" -ForegroundColor Cyan
-    Write-Host "🔍 Health Check: http://localhost:5000/health" -ForegroundColor Cyan
+    Write-Host "Application: http://localhost:5000" -ForegroundColor Cyan
+    Write-Host "Health Check: http://localhost:5000/health" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "View logs with: docker logs -f $ContainerName" -ForegroundColor Yellow
     Write-Host "Stop with: docker stop $ContainerName" -ForegroundColor Yellow

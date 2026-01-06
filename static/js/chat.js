@@ -988,6 +988,33 @@ function resetMap() {
     }
 }
 
+window.exportChatTranscript = () => {
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return '';
+    
+    let transcript = '';
+    const messages = chatMessages.querySelectorAll('.message');
+    
+    messages.forEach((message, index) => {
+        const isUser = message.classList.contains('user-message');
+        const speaker = isUser ? 'User' : 'Assistant';
+        const text = message.textContent.trim();
+        
+        if (text) {
+            transcript += `${speaker}: ${text}\n\n`;
+        }
+    });
+    
+    return transcript;
+}
+
+window.navigateToEvaluation = () => {
+    const transcript = window.exportChatTranscript();
+    // Store transcript in localStorage to pass to test.html
+    localStorage.setItem('chatTranscript', transcript);
+    window.location.href = '/test';
+}
+
 window.clearChatHistory = () => {
     lastInteractionTime = new Date()
     resetMap();

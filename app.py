@@ -130,6 +130,10 @@ def chatView():
     cache_bust = str(int(time.time()))
     return render_template("chat.html", methods=["GET"], client_id=initializeClient(), enable_websockets=enable_websockets, cache_bust=cache_bust)
 
+@app.route("/test")
+def testView():
+    return render_template("test.html", methods=["GET"], client_id=initializeClient())
+
 # The API route to get the speech token
 @app.route("/api/getSpeechToken", methods=["GET"])
 def getSpeechToken() -> Response:
@@ -482,6 +486,80 @@ def clearChatHistory() -> Response:
     initializeChatContext(request.headers.get('SystemPrompt'), client_id)
     client_context['chat_initiated'] = True
     return Response('Chat history cleared.', status=200)
+
+# The API route for transcript evaluation
+# It receives a prompt and returns the LLM response for evaluation purposes
+@app.route("/api/evaluate", methods=["POST"])
+def evaluate() -> Response:
+    try:
+        # Parse request body
+        request_data = request.get_json()
+        if not request_data:
+            return Response(json.dumps({"error": "Invalid request body"}), 
+                          mimetype='application/json', status=400)
+        
+        prompt = request_data.get('prompt')
+        request_type = request_data.get('requestType', 'general')
+        temperature = request_data.get('temperature', 0.7)
+        max_tokens = request_data.get('maxTokens', 1000)
+        
+        if not prompt:
+            return Response(json.dumps({"error": "Prompt is required"}), 
+                          mimetype='application/json', status=400)
+        
+        # Check if Azure OpenAI is configured
+        if not azure_openai_endpoint or not azure_openai_api_key:
+            return Response(json.dumps({"error": "Azure OpenAI is not configured"}), 
+                          mimetype='application/json', status=500)
+        
+        # Call Azure OpenAI
+        print(f"[Evaluate] Request type: {request_type}")
+        
+        response = azure_openai.chat.completions.create(
+            model=azure_openai_deployment_name,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an expert evaluator for helper/counselor conversations. Provide structured, accurate, and helpful evaluations in valid JSON format."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=temperature,
+            max_tokens=max_tokens,
+            response_format={"type": "json_object"}  # Enforce JSON response
+        )
+        
+        # Extract the response content
+        llm_response = response.choices[0].message.content
+        
+        print(f"[Evaluate] Response received for {request_type}")
+        
+        # Return the response
+        return Response(
+            json.dumps({
+                "success": True,
+                "requestType": request_type,
+                "response": llm_response
+            }),
+            mimetype='application/json',
+            status=200
+        )
+        
+    except Exception as e:
+        print(f"[Evaluate] Error: {str(e)}")
+        print(traceback.format_exc())
+        return Response(
+            json.dumps({
+                "success": False,
+                "error": str(e),
+                "traceback": traceback.format_exc()
+            }),
+            mimetype='application/json',
+            status=500
+        )
 
 # The API route to disconnect the TTS avatar
 @app.route("/api/disconnectAvatar", methods=["POST"])

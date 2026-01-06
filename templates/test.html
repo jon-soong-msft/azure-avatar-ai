@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Transcript Evaluation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v={{ cache_bust }}">
+    <link rel="icon" href="{{ url_for('static', filename='image/favicon.ico') }}">
+    <style>
+        .evaluation-container {
+            display: flex;
+            gap: 24px;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .panel {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .panel h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 10px;
+        }
+        
+        .transcript-input {
+            width: calc(100% - 25px);
+            height: 400px;
+            padding: 12px;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        
+        .generate-btn {
+            margin-top: 16px;
+            padding: 12px 24px;
+            font-size: 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .generate-btn:hover {
+            background-color: #005a9e;
+        }
+        
+        .eval-section {
+            border: 1px solid #e0e0e0;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+        
+        .eval-section h3 {
+            margin-top: 0;
+            color: #0078d4;
+            font-size: 16px;
+        }
+        
+        .eval-section p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        .eval-section b {
+            color: #333;
+        }
+        
+        .score-line {
+            font-family: 'Courier New', monospace;
+            margin: 4px 0;
+        }
+        
+        .rubric-item {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #0078d4;
+        }
+        
+        .rubric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .rubric-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .rubric-score {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0078d4;
+            min-width: 50px;
+            text-align: right;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0078d4, #00bcf2);
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.low {
+            background: linear-gradient(90deg, #d13438, #e74856);
+        }
+        
+        .progress-fill.medium {
+            background: linear-gradient(90deg, #ff8c00, #faa21b);
+        }
+        
+        .progress-fill.high {
+            background: linear-gradient(90deg, #107c10, #498205);
+        }
+        
+        .suggestion-input {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+    </style>
+    <script>
+        // Load transcript from localStorage when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            const transcript = localStorage.getItem('chatTranscript');
+            if (transcript) {
+                const textarea = document.querySelector('.transcript-input');
+                if (textarea) {
+                    textarea.value = transcript;
+                }
+                // Clear the stored transcript after loading
+                localStorage.removeItem('chatTranscript');
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/test.js') }}?v={{ cache_bust }}"></script>
+</head>
+<body>
+    <h1 id="main-title">📊 Transcript Evaluation Tool</h1>
+    
+    <div class="evaluation-container">
+        <!-- LEFT PANEL -->
+        <div class="panel">
+            <h2>📝 Transcript</h2>
+            <textarea class="transcript-input" placeholder="Paste transcript here..."></textarea>
+            <button class="generate-btn">✨ Generate Evaluation</button>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="panel">
+            <h2>📋 Evaluation</h2>
+            
+            <div class="eval-section">
+                <h3>Executive Summary</h3>
+                <p><b>Overall Level:</b> Good</p>
+                <p><b>Strengths:</b> Encourages sharing</p>
+                <p><b>Priorities:</b> Missing emotional validation</p>
+            </div>
+
+            <div class="eval-section">
+                <h3>Rubric Scores</h3>
+                
+                <div class="rubric-item">
+                    <div class="rubric-header">
+                        <span class="rubric-name">Rapport & Safety</span>
+                        <span class="rubric-score">2/4</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill medium" style="width: 50%;"></div>
+                    </div>
+                </div>
+                
+                <div class="rubric-item">
+                    <div class="rubric-header">
+                        <span class="rubric-name">Emotional Validation</span>
+                        <span class="rubric-score">1/4</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill low" style="width: 25%;"></div>
+                    </div>
+                </div>
+                
+                <div class="rubric-item">
+                    <div class="rubric-header">
+                        <span class="rubric-name">Clarification</span>
+                        <span class="rubric-score">2/4</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill medium" style="width: 50%;"></div>
+                    </div>
+                </div>
+                
+                <div class="rubric-item">
+                    <div class="rubric-header">
+                        <span class="rubric-name">Issue Framing</span>
+                        <span class="rubric-score">2/4</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill medium" style="width: 50%;"></div>
+                    </div>
+                </div>
+                
+                <div class="rubric-item">
+                    <div class="rubric-header">
+                        <span class="rubric-name">Options</span>
+                        <span class="rubric-score">1/4</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill low" style="width: 25%;"></div>
+                    </div>
+                </div>
+                
+                <div class="rubric-item">
+                    <div class="rubric-header">
+                        <span class="rubric-name">Empowerment</span>
+                        <span class="rubric-score">1/4</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill low" style="width: 25%;"></div>
+                    </div>
+                </div>
+                
+                <div class="rubric-item">
+                    <div class="rubric-header">
+                        <span class="rubric-name">Next Steps</span>
+                        <span class="rubric-score">1/4</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill low" style="width: 25%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eval-section">
+                <h3>Recommendations</h3>
+                <p>• Add emotional validation</p>
+                <p>• Ask timeline + frequency</p>
+                <p>• Offer options</p>
+            </div>
+
+            <div class="eval-section">
+                <h3>Suggested Reply</h3>
+                <textarea class="suggestion-input">"It sounds like this has been overwhelming..."</textarea>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
