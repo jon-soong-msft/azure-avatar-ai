@@ -267,9 +267,9 @@ Provide your response in the following JSON format:
 
         container.innerHTML = `
             <h3>Executive Summary</h3>
-            <p><b>Overall Level:</b> ${this.escapeHtml(overallLevel)}</p>
-            <p><b>Strengths:</b> ${this.escapeHtml(strengths)}</p>
-            <p><b>Priorities:</b> ${this.escapeHtml(priorities)}</p>
+            <p style="color: #333; font-style: normal; margin: 8px 0; line-height: 1.6; font-size: 14px;"><b>Overall Level:</b> ${this.escapeHtml(overallLevel)}</p>
+            <p style="color: #333; font-style: normal; margin: 8px 0; line-height: 1.6; font-size: 14px;"><b>Strengths:</b> ${this.escapeHtml(strengths)}</p>
+            <p style="color: #333; font-style: normal; margin: 8px 0; line-height: 1.6; font-size: 14px;"><b>Priorities:</b> ${this.escapeHtml(priorities)}</p>
         `;
     }
 
@@ -277,7 +277,7 @@ Provide your response in the following JSON format:
      * Display Rubric Scores
      */
     displayRubricScores(scores) {
-        const container = document.querySelector('.eval-section:nth-of-type(2)');
+        const container = document.querySelector('.eval-section:nth-of-type(3)');
         if (!container) return;
 
         const rubrics = scores.rubrics || [];
@@ -311,7 +311,7 @@ Provide your response in the following JSON format:
      * Display Recommendations
      */
     displayRecommendations(recommendations) {
-        const container = document.querySelector('.eval-section:nth-of-type(3)');
+        const container = document.querySelector('.eval-section:nth-of-type(2)');
         if (!container) return;
 
         const items = recommendations.recommendations || [];
@@ -319,7 +319,7 @@ Provide your response in the following JSON format:
         let html = '<h3>Recommendations</h3>';
         
         items.forEach(item => {
-            html += `<p>• ${this.escapeHtml(item)}</p>`;
+            html += `<p style="color: #333; font-style: normal; margin: 8px 0; line-height: 1.6; font-size: 14px;">• ${this.escapeHtml(item)}</p>`;
         });
 
         container.innerHTML = html;
@@ -334,6 +334,10 @@ Provide your response in the following JSON format:
 
         const suggestedText = reply.suggestedReply || 'No suggestion available';
         textarea.value = suggestedText;
+        // Remove placeholder attribute and ensure normal styling
+        textarea.removeAttribute('placeholder');
+        textarea.style.color = '#333';
+        textarea.style.fontStyle = 'normal';
     }
 
     /**
