@@ -343,6 +343,7 @@ def connectSTT() -> Response:
     # disconnect STT if already connected
     disconnectSttInternal(client_id)
     system_prompt = request.headers.get('SystemPrompt')
+    stt_locales = request.headers.get('SttLocales', 'en-US')  # Default to en-US if not provided
     client_context = client_contexts[client_id]
     try:
         if speech_private_endpoint:
@@ -363,11 +364,30 @@ def connectSTT() -> Response:
             else:
                 speech_config = speechsdk.SpeechConfig(subscription=speech_key, endpoint=f'wss://{speech_region}.stt.speech.microsoft.com/speech/universal/v2')
 
+        # Configure auto-language detection
+        speech_config.set_property(
+            property_id=speechsdk.PropertyId.SpeechServiceConnection_LanguageIdMode, 
+            value='Continuous'
+        )
+        
+        # Parse comma-separated locales
+        locale_list = [locale.strip() for locale in stt_locales.split(',')]
+        
         audio_input_stream = speechsdk.audio.PushAudioInputStream()
         client_context['audio_input_stream'] = audio_input_stream
 
         audio_config = speechsdk.audio.AudioConfig(stream=audio_input_stream)
-        speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)
+        
+        # Create auto-detect source language config
+        auto_detect_source_language_config = speechsdk.languageconfig.AutoDetectSourceLanguageConfig(
+            languages=locale_list
+        )
+        
+        speech_recognizer = speechsdk.SpeechRecognizer(
+            speech_config=speech_config, 
+            auto_detect_source_language_config=auto_detect_source_language_config,
+            audio_config=audio_config
+        )
         client_context['speech_recognizer'] = speech_recognizer
 
         speech_recognizer.session_started.connect(lambda evt: print(f'STT session started - session id: {evt.session_id}'))

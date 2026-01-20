@@ -37,7 +37,25 @@
 
   <h2>🎙️ Speech Configuration</h2>
   <label for="sttLocale">STT Locale(s):</label>
-  <input id="sttLocales" type="text" value="en-US" />
+  <input id="sttLocales" type="text" list="sttLocaleList" value="en-US" onclick="this.value=''; this.blur(); this.focus();" />
+  <datalist id="sttLocaleList">
+    <option value="en-US">English (US)</option>
+    <option value="en-SG">English (Singapore)</option>
+    <option value="ms-MY">Malay (Malaysia)</option>
+    <option value="id-ID">Indonesian (Indonesia)</option>
+    <option value="zh-CN">Chinese (Mandarin, Simplified)</option>
+    <option value="en-SG,ms-MY,zh-CN,ta-IN">Singapore Mix (EN/MY/CN/TA)</option>
+    <option value="th-TH">Thai</option>
+    <option value="zh-HK">Chinese (Cantonese, Hong Kong)</option>
+    <option value="ja-JP">Japanese</option>
+    <option value="ko-KR">Korean</option>
+    <option value="vi-VN">Vietnamese</option>
+    <option value="fil-PH">Filipino</option>
+    <option value="ta-IN">Tamil (India)</option>
+    <option value="hi-IN">Hindi (India)</option>
+    <option value="en-US,ms-MY">English + Malay</option>
+    <option value="en-US,ms-MY,id-ID">English + Malay + Indonesian</option>
+  </datalist>
   <label for="ttsVoice">TTS Voice:</label>
   <input id="ttsVoice" type="text" list="ttsVoiceList" value="en-US-AmandaMultilingualNeural" onclick="this.value=''; this.blur(); this.focus();" />
   <datalist id="ttsVoiceList">
@@ -46,6 +64,12 @@
     <option value="en-US-AvaMultilingualNeural">Ava Multilingual (US)</option>
     <option value="en-US-AndrewMultilingualNeural">Andrew Multilingual (US)</option>
     <option value="en-US-EmmaMultilingualNeural">Emma Multilingual (US)</option>
+    <option value="ms-MY-OsmanNeural">Osman (Malaysia)</option>
+    <option value="ms-MY-YasminNeural">Yasmin (Malaysia)</option>
+    <option value="id-ID-ArdiNeural">Ardi (Indonesia)</option>
+    <option value="id-ID-GadisNeural">Gadis (Indonesia)</option>
+    <option value="th-TH-NiwatNeural">Niwat (Thailand)</option>
+    <option value="th-TH-PremwadeeNeural">Premwadee (Thailand)</option>
     <option value="en-US-AlloyTurboMultilingualNeural">Alloy Turbo Multilingual (US)</option>
     <option value="en-US-EchoTurboMultilingualNeural">Echo Turbo Multilingual (US)</option>
     <option value="en-US-FableTurboMultilingualNeural">Fable Turbo Multilingual (US)</option>
