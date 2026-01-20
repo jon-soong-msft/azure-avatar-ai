@@ -3,7 +3,9 @@
 This folder contains a containerized version of the Azure AI Chatbot application optimized for deployment to Azure Container Apps.
 The web app UI aims to simulate a video call between a user and a custom avatar that can converse, respond to question and which retrieve its knowledge from documents indexed by the azure AI search services. 
 
-![Azure Avatar AI Screenshot](avatar-ai-screenshot.png)
+![Azure Voice AI Coach Screenshot](/samples/demo-ai-voice-coach.png)
+![Azure Voice AI Coach Evaluation Screenshot](/samples/demo-ai-voice-coach-evaluation.png)
+
 
 ## 🏗️ Architecture
 

@@ -281,22 +281,24 @@ function createSpeechRecognizer() {
             const speechPrivateEndpoint = response.headers.get('SpeechPrivateEndpoint')
             response.text().then(text => {
                 const speechToken = text
-                const speechRecognitionConfig = speechPrivateEndpoint ?
-                    SpeechSDK.SpeechConfig.fromEndpoint(new URL(`wss://${speechPrivateEndpoint.replace('https://', '')}/stt/speech/universal/v2`), '') :
-                    SpeechSDK.SpeechConfig.fromEndpoint(new URL(`wss://${speechRegion}.stt.speech.microsoft.com/speech/universal/v2`), '')
-                speechRecognitionConfig.authorizationToken = speechToken
+                const speechRecognitionConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(speechToken, speechRegion)
                 speechRecognitionConfig.setProperty(SpeechSDK.PropertyId.SpeechServiceConnection_LanguageIdMode, "Continuous")
                 speechRecognitionConfig.setProperty("SpeechContext-PhraseDetection.TrailingSilenceTimeout", "3000")
                 speechRecognitionConfig.setProperty("SpeechContext-PhraseDetection.InitialSilenceTimeout", "10000")
                 speechRecognitionConfig.setProperty("SpeechContext-PhraseDetection.Dictation.Segmentation.Mode", "Custom")
                 speechRecognitionConfig.setProperty("SpeechContext-PhraseDetection.Dictation.Segmentation.SegmentationSilenceTimeoutMs", "200")
-                var sttLocales = document.getElementById('sttLocales').value.split(',')
+                var sttLocales = document.getElementById('sttLocales').value.split(',').map(l => l.trim())
                 var autoDetectSourceLanguageConfig = SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages(sttLocales)
                 speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(speechRecognitionConfig, autoDetectSourceLanguageConfig, SpeechSDK.AudioConfig.fromDefaultMicrophoneInput())
+            }).catch(err => {
+                console.error('Error processing speech token:', err)
             })
         } else {
             throw new Error(`Failed fetching speech token: ${response.status} ${response.statusText}`)
         }
+    })
+    .catch(err => {
+        console.error('Error creating speech recognizer:', err)
     })
 }
 
@@ -988,6 +990,33 @@ function resetMap() {
     }
 }
 
+window.exportChatTranscript = () => {
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return '';
+    
+    let transcript = '';
+    const messages = chatMessages.querySelectorAll('.message');
+    
+    messages.forEach((message, index) => {
+        const isUser = message.classList.contains('user-message');
+        const speaker = isUser ? 'User' : 'Assistant';
+        const text = message.textContent.trim();
+        
+        if (text) {
+            transcript += `${speaker}: ${text}\n\n`;
+        }
+    });
+    
+    return transcript;
+}
+
+window.navigateToEvaluation = () => {
+    const transcript = window.exportChatTranscript();
+    // Store transcript in localStorage to pass to test.html
+    localStorage.setItem('chatTranscript', transcript);
+    window.location.href = '/test';
+}
+
 window.clearChatHistory = () => {
     lastInteractionTime = new Date()
     resetMap();
@@ -1076,11 +1105,13 @@ window.microphone = () => {
         const audioWorkletScriptBlob = new Blob([audioWorkletScript], { type: 'application/javascript; charset=utf-8' })
         const audioWorkletScriptUrl = URL.createObjectURL(audioWorkletScriptBlob)
 
+        const sttLocales = document.getElementById('sttLocales').value;
         fetch('/api/connectSTT', {
             method: 'POST',
             headers: {
                 'ClientId': clientId,
-                'SystemPrompt': document.getElementById('prompt').value
+                'SystemPrompt': document.getElementById('prompt').value,
+                'SttLocales': sttLocales
             },
             body: ''
         })

@@ -1,0 +1,15 @@
+User: Hello, how can I help you today?
+
+Assistant: Hi, thanks for asking. I'm really upset about something that happened recently at work. I feel like I've been treated unfairly by my supervisor, but I'm not exactly sure how to go about raising a formal grievance. Could you help me understand what I need to do?
+
+User: All right, can you tell me more about what have happened at work and, umm, what causes you to feel that way?
+
+Assistant: Yeah, it's been bothering me a lot. So, over the past few weeks, my workload has suddenly increased a lot compared to my colleagues. I’ve tried talking to my supervisor about it, but it feels like they just brush me off or say I should manage better. It’s frustrating because I’m putting in extra hours, but no one seems to notice or appreciate it. I’m worried this might affect my performance review too, but I don’t know if that’s something I can challenge. Does that make sense?
+
+User: Yeah, totally. I get where is your frustration coming from, right. I I know how you feel. You know, given that I'm in the same position, I'll I'll feel the same way as well. So they have this been always umm like does this happen a lot? Umm like since day one that your supervisor have been treating you that way or it's because of certain incident and your manager change ever after from from there.
+
+User: Hello, are you still there?
+
+Assistant: Yes, I’m still here. Thanks for listening. To answer your question, it wasn’t always like this. Things were okay at first, but over the last month or so, the workload suddenly got heavier for me, and that’s when the issues with my supervisor started. It feels like they’ve been less supportive since then. I’m not sure if it’s because of something specific or just a change in how they manage. Does that help clarify?
+
+User: Yeah. I'm just trying to understand like umm, umm, is it because like something happened and like manager changed the way that it's treating you or that's just the way he is? So and also trying you, you do help me to validate that, right? That's my understanding for now. And also I want to like understand from your point of view, what's the best resolution looks like?
